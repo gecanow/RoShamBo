@@ -15,6 +15,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var isAdvertising : Bool = true
     
+    //=====================================================
+    // VIEW DID LOAD
+    //=====================================================
     override func viewDidLoad() {
         super.viewDidLoad()
         appDelegate.mpcManager.mainDelegate = self
@@ -61,9 +64,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func connectingWithPeer(_ peerID: MCPeerID) {
-        //self.performSegueWithIdentifier("waitingSegue", sender: nil)
         let title = "Connecting you with \(peerID.displayName)."
-        let message = "Stats: X"
+        let message = ""
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
@@ -110,6 +112,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         isAdvertising = !isAdvertising
     }
     
+    //=====================================================
+    // Handles when a session could not be connected to
+    //=====================================================
     func couldNotConnectToSession() {
         let title = "We're Sorry"
         let message = "The bluetooth/wifi is not working in your area."

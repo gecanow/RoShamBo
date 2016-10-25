@@ -9,6 +9,7 @@
 import UIKit
 import MultipeerConnectivity
 
+// protocol for the main view controller
 protocol MPCManagerMainDelegate {
     func foundPeer()
     func lostPeer()
@@ -18,6 +19,7 @@ protocol MPCManagerMainDelegate {
     func couldNotConnectToSession()
 }
 
+// protocol for the game view controller
 protocol MPCManagerGameViewDelegate {
     func received(_ data: NSString)
 }
@@ -35,8 +37,9 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     var mainDelegate : MPCManagerMainDelegate?
     var gameViewDelegate : MPCManagerGameViewDelegate?
     
-    var recievedData : NSString!
-    
+    //=====================================================
+    // INIT
+    //=====================================================
     override init() {
         super.init()
         
@@ -103,38 +106,42 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         }
     }
     
+    //=====================================================
     // Received data from remote peer
+    //=====================================================
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID){
-        print("I just recieved a \(NSString(data: data, encoding: String.Encoding.utf8.rawValue))")
-        self.recievedData = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
-        
-        //let gameVC = GameViewController()
-        //gameVC.determineWinner(NSString(data: data, encoding: String.Encoding.utf8.rawValue)!)
         gameViewDelegate?.received(NSString(data: data, encoding: String.Encoding.utf8.rawValue)!)
     }
     
-    
-    // Received a byte stream from remote peer
-    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID){
-    }
-    
-    // Start receiving a resource from remote peer
-    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress){
-    }
-    
-    // Finished receiving a resource from remote peer and saved the content in a temporary location - the app is responsible for moving the file to a permanent location within its sandbox
-    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: Error?){
-    }
-    
-    
-    
-    
-    
+    //=====================================================
+    // Handles sending data to a peer
+    //=====================================================
     func sendData(_ string: String, toPeer targetPeer: MCPeerID) {
         let dataToSend = string.data(using: String.Encoding.utf8)
         let peersArray = NSArray(object: targetPeer)
         
         try! session.send(dataToSend!, toPeers: peersArray as! [MCPeerID], with: .unreliable)
+    }
+    
+    //=====================================================
+    // Received a byte stream from remote peer
+    //=====================================================
+    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID){
+    }
+    
+    //=====================================================
+    // Start receiving a resource from remote peer
+    //=====================================================
+    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress){
+    }
+    
+    //=====================================================
+    // Finished receiving a resource from remote peer and 
+    // saved the content in a temporary location - the app 
+    // is responsible for moving the file to a permanent 
+    // location within its sandbox
+    //=====================================================
+    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: Error?){
     }
     
 }

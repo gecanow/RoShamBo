@@ -8,12 +8,6 @@
 
 import UIKit
 
-enum Options {
-    case Rock
-    case Paper
-    case Scissors
-}
-
 class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     
     @IBOutlet weak var winnerLabel: UILabel!
@@ -27,6 +21,9 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
+    //===========================================
+    // VIEW DID LOAD
+    //===========================================
     override func viewDidLoad() {
         super.viewDidLoad()
         appDelegate.mpcManager.gameViewDelegate = self
@@ -34,6 +31,10 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
         activityIndicator.isHidden = true
     }
     
+    //===========================================
+    // Handles when the user taps rock, paper, 
+    // or scissors
+    //===========================================
     @IBAction func onTappedOption(_ sender: UIButton) {
         myChoice = (sender.currentTitle?.uppercased())!
         
@@ -45,14 +46,15 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
         
-        sendMyChoice()
-    }
-    
-    func sendMyChoice() {
         appDelegate.mpcManager.sendData(myChoice, toPeer: appDelegate.mpcManager.session.connectedPeers[0])
         determineWinner()
     }
     
+    //===========================================
+    // Delegate function: is called when the
+    // connected peer chose rock, paper, or
+    // scissors
+    //===========================================
     func received(_ data: NSString) {
         if data.isEqual(to: "ROCK") {
             theirChoice = "ROCK"
@@ -64,6 +66,9 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
         determineWinner()
     }
     
+    //===========================================
+    // Determines the winner
+    //===========================================
     func determineWinner() {
         if myChoice != "" && theirChoice != "" {
             

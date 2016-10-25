@@ -66,49 +66,11 @@
                     <connections>
                         <outlet property="tablePeers" destination="cs5-WF-q6T" id="gke-jK-oVq"/>
                         <segue destination="t9x-QB-EMw" kind="show" identifier="gameSegue" id="Tcj-U9-v4f"/>
-                        <segue destination="iMr-jt-UtY" kind="presentation" identifier="waitingSegue" id="Ixn-To-xxJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1133.5999999999999" y="312.59370314842579"/>
-        </scene>
-        <!--Waiting View Controller-->
-        <scene sceneID="6HQ-gT-UHh">
-            <objects>
-                <viewController id="iMr-jt-UtY" customClass="WaitingViewController" customModule="RoShamBo" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="TC6-IU-HL0"/>
-                        <viewControllerLayoutGuide type="bottom" id="Je4-oJ-aRD"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="u7G-W5-mk7">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="oFt-DT-fni">
-                                <frame key="frameInset" minX="290" minY="290" width="20" height="20"/>
-                            </activityIndicatorView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Connecting" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GnO-o4-wFU">
-                                <frame key="frameInset" minX="256" minY="249" width="89" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="oFt-DT-fni" firstAttribute="centerX" secondItem="u7G-W5-mk7" secondAttribute="centerX" id="1K8-Sp-kVx"/>
-                            <constraint firstItem="oFt-DT-fni" firstAttribute="centerY" secondItem="u7G-W5-mk7" secondAttribute="centerY" id="MMB-sv-4pf"/>
-                            <constraint firstItem="GnO-o4-wFU" firstAttribute="centerX" secondItem="u7G-W5-mk7" secondAttribute="centerX" id="fHo-cF-lid"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="activityIndicator" destination="oFt-DT-fni" id="hrp-wS-jOc"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mcf-ag-Ryl" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1134" y="1048"/>
         </scene>
         <!--Game View Controller-->
         <scene sceneID="xEe-er-6Vh">
