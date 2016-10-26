@@ -20,14 +20,17 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     var theirChoice = ""
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    var mpc : MPCManager!
     
     //===========================================
     // VIEW DID LOAD
     //===========================================
     override func viewDidLoad() {
         super.viewDidLoad()
-        appDelegate.mpcManager.gameViewDelegate = self
-        appDelegate.mpcManager.advertiser.stopAdvertisingPeer()
+        mpc = appDelegate.mpcManager
+        
+        mpc.gameViewDelegate = self
+        mpc.advertiser.stopAdvertisingPeer()
         activityIndicator.isHidden = true
     }
     
@@ -46,8 +49,13 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
         
-        appDelegate.mpcManager.sendData(myChoice, toPeer: appDelegate.mpcManager.session.connectedPeers[0])
+        mpc.sendData(myChoice, toPeer: mpc.session.connectedPeers[0])
         determineWinner()
+    }
+    
+    @IBAction func onTappedExit(_ sender: UIButton) {
+        mpc.sendData("EXIT", toPeer: mpc.session.connectedPeers[0])
+        dismissSelf()
     }
     
     //===========================================
@@ -56,7 +64,10 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     // scissors
     //===========================================
     func received(_ data: NSString) {
-        if data.isEqual(to: "ROCK") {
+        if data.isEqual(to: "EXIT") {
+            print("received an EXIT")
+            theirChoice = "EXIT"
+        } else if data.isEqual(to: "ROCK") {
             theirChoice = "ROCK"
         } else if data.isEqual(to: "PAPER") {
             theirChoice = "PAPER"
@@ -70,7 +81,17 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     // Determines the winner
     //===========================================
     func determineWinner() {
-        if myChoice != "" && theirChoice != "" {
+        
+        if theirChoice == "EXIT" {
+            let alert = UIAlertController(title: "\(mpc.session.connectedPeers[0].displayName) has exited the game.", message: "", preferredStyle: .alert)
+            
+            let okayAction = UIAlertAction(title: "OK", style: .default, handler: { (Void) in
+                self.dismissSelf()
+            })
+            
+            alert.addAction(okayAction)
+            present(alert, animated: true, completion: nil)
+        } else if (myChoice != "" && theirChoice != "") {
             
             activityIndicator.stopAnimating()
             activityIndicator.isHidden = true
@@ -85,6 +106,15 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
                 winnerLabel.text = "You Lose..."
             }
             
+        } else {}
+    }
+    
+    //===========================================
+    // Handles dismissing the game view
+    //===========================================
+    func dismissSelf() {
+        self.dismiss(animated: true) { 
+            self.mpc.advertiser.startAdvertisingPeer()
         }
     }
 }

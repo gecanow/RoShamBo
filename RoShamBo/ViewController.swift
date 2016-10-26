@@ -9,11 +9,13 @@
 import UIKit
 import MultipeerConnectivity
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MPCManagerMainDelegate {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MPCManagerMainDelegate, UITextFieldDelegate {
     
     @IBOutlet weak var tablePeers: UITableView!
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var isAdvertising : Bool = true
+    
+    @IBOutlet weak var displayNameTextfield: UITextField!
     
     //=====================================================
     // VIEW DID LOAD
@@ -25,17 +27,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         appDelegate.mpcManager.advertiser.startAdvertisingPeer()
         
         isAdvertising = true
+        
+        displayNameTextfield.placeholder = appDelegate.mpcManager.peer.displayName
+        displayNameTextfield.delegate = self
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        //appDelegate.mpcManager.peer.displayName = displayNameTextfield.text!
+        displayNameTextfield.resignFirstResponder()
+        return true
     }
     
     //=====================================================
     // DELEGATE FUNCTIONS
     //=====================================================
-    
-    func foundPeer() {
-        tablePeers.reloadData()
-    }
-    
-    func lostPeer() {
+    func reload() {
         tablePeers.reloadData()
     }
     

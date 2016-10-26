@@ -11,8 +11,7 @@ import MultipeerConnectivity
 
 // protocol for the main view controller
 protocol MPCManagerMainDelegate {
-    func foundPeer()
-    func lostPeer()
+    func reload()
     func invitationWasReceived(_ fromPeer: String)
     func connectedWithPeer(_ peerID: MCPeerID)
     func connectingWithPeer(_ peerID: MCPeerID)
@@ -48,10 +47,10 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         session = MCSession(peer: peer)
         session.delegate = self
         
-        browser = MCNearbyServiceBrowser(peer: peer, serviceType: "appcoda-mpc")
+        browser = MCNearbyServiceBrowser(peer: peer, serviceType: "appcodax-mpc")
         browser.delegate = self
         
-        advertiser = MCNearbyServiceAdvertiser(peer: peer, discoveryInfo: nil, serviceType: "appcoda-mpc")
+        advertiser = MCNearbyServiceAdvertiser(peer: peer, discoveryInfo: nil, serviceType: "appcodax-mpc")
         advertiser.delegate = self
     }
     
@@ -60,14 +59,14 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     //=====================================================
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
         foundPeers.append(peerID)
-        mainDelegate?.foundPeer()
+        mainDelegate?.reload()
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
         if let index = foundPeers.index(of: peerID) {
             foundPeers.remove(at: index)
         }
-        mainDelegate?.lostPeer()
+        mainDelegate?.reload()
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
