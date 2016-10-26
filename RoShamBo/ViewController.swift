@@ -9,13 +9,14 @@
 import UIKit
 import MultipeerConnectivity
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MPCManagerMainDelegate, UITextFieldDelegate {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MPCManagerMainDelegate {
     
     @IBOutlet weak var tablePeers: UITableView!
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var isAdvertising : Bool = true
     
-    @IBOutlet weak var displayNameTextfield: UITextField!
+    @IBOutlet weak var displayNameLabel: UILabel!
+    @IBOutlet weak var informationView: UIView!
     
     //=====================================================
     // VIEW DID LOAD
@@ -28,14 +29,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         isAdvertising = true
         
-        displayNameTextfield.placeholder = appDelegate.mpcManager.peer.displayName
-        displayNameTextfield.delegate = self
+        displayNameLabel.text = "your display name: \(appDelegate.mpcManager.peer.displayName)"
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        //appDelegate.mpcManager.peer.displayName = displayNameTextfield.text!
-        displayNameTextfield.resignFirstResponder()
-        return true
+    @IBAction func onTappedQuestion(_ sender: AnyObject) {
+        informationView.isHidden = !informationView.isHidden
     }
     
     //=====================================================

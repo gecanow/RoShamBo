@@ -82,6 +82,8 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     //===========================================
     func determineWinner() {
         
+        print("here")
+        
         if theirChoice == "EXIT" {
             let alert = UIAlertController(title: "\(mpc.session.connectedPeers[0].displayName) has exited the game.", message: "", preferredStyle: .alert)
             
