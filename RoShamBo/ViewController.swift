@@ -13,7 +13,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBOutlet weak var tablePeers: UITableView!
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    var isAdvertising : Bool = true
     
     @IBOutlet weak var displayNameLabel: UILabel!
     @IBOutlet weak var informationView: UIView!
@@ -27,14 +26,40 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         appDelegate.mpcManager.browser.startBrowsingForPeers()
         appDelegate.mpcManager.advertiser.startAdvertisingPeer()
         
-        isAdvertising = true
-        
         displayNameLabel.text = "your display name: \(appDelegate.mpcManager.peer.displayName)"
     }
     
     @IBAction func onTappedQuestion(_ sender: AnyObject) {
         informationView.isHidden = !informationView.isHidden
     }
+    
+    @IBAction func onTappedEdit(_ sender: AnyObject) {
+        let ti = "Please enter a display name."
+        let me = "This will be the name by which your friends can find you."
+        let alert = UIAlertController(title: ti, message: me, preferredStyle: .alert)
+        
+        alert.addTextField { (_ textfield: UITextField) in
+            textfield.keyboardType = .alphabet
+        }
+        
+        let okAction = UIAlertAction(title: "OK", style: .default) { (Void) in
+            let newName = (alert.textFields?.first?.text)!
+            self.displayNameLabel.text = "your display name: \(newName)"
+            self.appDelegate.mpcManager.resetPeerID(toName: newName)
+        }
+        alert.addAction(okAction)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    //=====================================================
+    // The unwind segue function for the exit button on
+    // the instructions page
+    //=====================================================
+    @IBAction func unwindFromInstructions(segue: UIStoryboardSegue) {}
     
     //=====================================================
     // DELEGATE FUNCTIONS
@@ -107,14 +132,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // Switches between whether the advertising is on
     // or off
     //=====================================================
-    @IBAction func onSwitchedAdvertising(_ sender: AnyObject) {
-        if isAdvertising {
-            appDelegate.mpcManager.advertiser.stopAdvertisingPeer()
-        } else {
+    @IBAction func onSwitchedAdvertiser(_ sender: UISwitch) {
+        if sender.isOn {
             appDelegate.mpcManager.advertiser.startAdvertisingPeer()
+        } else {
+            appDelegate.mpcManager.advertiser.stopAdvertisingPeer()
         }
-        isAdvertising = !isAdvertising
     }
+    
     
     //=====================================================
     // Handles when a session could not be connected to

@@ -21,6 +21,7 @@ protocol MPCManagerMainDelegate {
 // protocol for the game view controller
 protocol MPCManagerGameViewDelegate {
     func received(_ data: NSString)
+    func peerExitedGame()
 }
 
 class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNearbyServiceAdvertiserDelegate {
@@ -35,6 +36,8 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     
     var mainDelegate : MPCManagerMainDelegate?
     var gameViewDelegate : MPCManagerGameViewDelegate?
+    
+    var occupiedWithGame = false
     
     //=====================================================
     // INIT
@@ -70,7 +73,7 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
-        print(error.localizedDescription)
+        //print(error.localizedDescription)
     }
     
     //=====================================================
@@ -82,7 +85,7 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     }
     
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
-        print(error.localizedDescription)
+        //print(error.localizedDescription)
     }
     
     //=====================================================
@@ -90,17 +93,22 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     //=====================================================
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         if state == .connected {
-            print("connected to session \(session)")
+            //print("connected to session \(session)")
             mainDelegate?.connectedWithPeer(peerID)
         } else if state == .connecting {
-            print("connecting to session \(session)")
+            //print("connecting to session \(session)")
             DispatchQueue.main.async(execute: { 
                 self.mainDelegate?.connectingWithPeer(peerID)
             })
         } else {
-            print("could not connect to session \(session)")
-            DispatchQueue.main.async(execute: { 
-                self.mainDelegate?.couldNotConnectToSession()
+            //print("could not connect to session \(session)")
+            DispatchQueue.main.async(execute: {
+                
+                if self.occupiedWithGame {
+                    self.gameViewDelegate?.peerExitedGame()
+                } else {
+                    self.mainDelegate?.couldNotConnectToSession()
+                }
             })
         }
     }
@@ -141,6 +149,47 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     // location within its sandbox
     //=====================================================
     func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: Error?){
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    func resetPeerID(toName: String) {
+        // first tell the advertiser to stop and the browser to stop
+        advertiser.stopAdvertisingPeer()
+        browser.stopBrowsingForPeers()
+        
+        // then set the found peers array to an empty array
+        foundPeers = [MCPeerID]()
+        mainDelegate?.reload()
+        
+        // then reset everything else (all from viewDidLoad function)
+        peer = MCPeerID(displayName: toName)
+        
+        session = MCSession(peer: peer)
+        session.delegate = self
+        
+        browser = MCNearbyServiceBrowser(peer: peer, serviceType: "appcodax-mpc")
+        browser.delegate = self
+        
+        advertiser = MCNearbyServiceAdvertiser(peer: peer, discoveryInfo: nil, serviceType: "appcodax-mpc")
+        advertiser.delegate = self
+        
+        // then re-advertise and re-browse
+        advertiser.startAdvertisingPeer()
+        browser.startBrowsingForPeers()
     }
     
 }
