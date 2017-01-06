@@ -11,6 +11,7 @@ import UIKit
 class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     
     @IBOutlet weak var winnerLabel: UILabel!
+    @IBOutlet weak var choiceLabel: UILabel!
     @IBOutlet weak var rockButton: UIButton!
     @IBOutlet weak var paperButton: UIButton!
     @IBOutlet weak var scissorsButton: UIButton!
@@ -23,6 +24,7 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var mpc : MPCManager!
     var peerName = ""
+    var alert = UIAlertController()
     
     //===========================================
     // VIEW DID LOAD
@@ -36,11 +38,27 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
         mpc.occupiedWithGame = true
         
         activityIndicator.isHidden = true
-        peerName = mpc.peer.displayName
+        peerName = mpc.session.connectedPeers[0].displayName
+    }
+    
+    func restartGame() {
+        myChoice = ""
+        theirChoice = ""
+        
+        activityIndicator.isHidden = true
+        
+        winnerLabel.text = "rematch has begun!"
+        choiceLabel.text = "you chose: ? | they chose: ?"
+        
+        rockButton.isEnabled = true
+        paperButton.isEnabled = true
+        scissorsButton.isEnabled = true
+        
+        rematchButton.isEnabled = false
     }
     
     //===========================================
-    // Handles when the user taps rock, paper, 
+    // Handles when the user taps rock, paper,
     // or scissors
     //===========================================
     @IBAction func onTappedOption(_ sender: UIButton) {
@@ -54,7 +72,7 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
         
-        mpc.sendData(myChoice, toPeer: mpc.session.connectedPeers[0])
+        safetyCheck(dataToSend: myChoice)
         determineWinner()
     }
     
@@ -62,14 +80,15 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     // Handles when the user taps exit
     //===========================================
     @IBAction func onTappedExit(_ sender: UIButton) {
-        if mpc.session.connectedPeers.count > 0 {
-            mpc.sendData("EXIT", toPeer: mpc.session.connectedPeers[0])
-        }
+        safetyCheck(dataToSend: "EXIT")
         dismissSelf()
     }
     
+    //===========================================
+    // Handles when the user taps rematch
+    //===========================================
     @IBAction func onTappedRematch(_ sender: UIButton) {
-        mpc.sendData("REMATCH", toPeer: mpc.session.connectedPeers[0])
+        safetyCheck(dataToSend: "REMATCH")
     }
     
     //===========================================
@@ -81,12 +100,13 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
         if data.isEqual(to: "EXIT") {
             peerExitedGame()
         } else if data.isEqual(to: "REMATCH") {
-            print("recieved a rematch request")
             rematchAlert()
         } else if data.isEqual(to: "ACCEPTED_REMATCH") {
-            //print("they accepted my rematch!")
+            DispatchQueue.main.async(execute: { 
+                self.restartGame()
+            })
         } else if data.isEqual(to: "DECLINED_REMATCH") {
-            //print("they declined my rematch :(")
+            sendAlertWithExitOption(info: "\(peerName) declined your rematch.")
         } else if data.isEqual(to: "ROCK") {
             theirChoice = "ROCK"
         } else if data.isEqual(to: "PAPER") {
@@ -95,33 +115,15 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
             theirChoice = "SCISSORS"
         }
         
-        determineWinner()
-        
-        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(determineWinner), userInfo: nil, repeats: false)
-    }
-    
-    func rematchAlert() {
-        let alert = UIAlertController(title: "\(peerName) would like a rematch!", message: "Tap 'Accept' to accept their challenge!", preferredStyle: .alert)
-        
-        let accept = UIAlertAction(title: "Accept", style: .default, handler: { (Void) in
-            self.mpc.sendData("ACCEPTED_REMATCH", toPeer: self.mpc.session.connectedPeers[0])
+        DispatchQueue.main.async(execute: {
+            self.determineWinner()
         })
-        let decline = UIAlertAction(title: "Decline", style: .cancel) { (Void) in
-            self.mpc.sendData("DECLINED_REMATCH", toPeer: self.mpc.session.connectedPeers[0])
-        }
-        
-        alert.addAction(accept)
-        alert.addAction(decline)
-        
-        present(alert, animated: true, completion: nil)
     }
     
     //===========================================
     // Determines the winner
     //===========================================
     func determineWinner() {
-        
-        print("here, determining the winner!!!!!!! (or at least trying to...)")
         
         if (myChoice != "" && theirChoice != "") {
             
@@ -137,6 +139,9 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
             } else {
                 winnerLabel.text = "You Lose!"
             }
+            
+            choiceLabel.text = "you chose: \(myChoice.lowercased()) | they chose: \(theirChoice.lowercased())"
+            
             rematchButton.isEnabled = true
             
         }
@@ -148,28 +153,64 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     //===========================================
     func peerExitedGame() {
         rematchButton.isEnabled = false
-        
-        let alert = UIAlertController(title: "\(peerName) has exited the game.", message: "", preferredStyle: .alert)
-        let okayAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-        alert.addAction(okayAction)
-        present(alert, animated: true, completion: nil)
+        sendAlertWithExitOption(info: "\(peerName) has exited the game.")
     }
     
     //===========================================
-    // Display an alert with title mainMessage 
-    // and message smallMessage
+    // Handles sending an alert with title 
+    // "info" and an OKAY option and as EXIT 
+    // option
     //===========================================
-//    func displayAlert(mainMessage: String, smallMessage: String) {
-//        
-//        let alert = UIAlertController(title: mainMessage, message: smallMessage, preferredStyle: .alert)
-//        
-//        let okayAction = UIAlertAction(title: "OK", style: .default, handler: { (Void) in
-//            //self.dismissSelf()
-//        })
-//        
-//        alert.addAction(okayAction)
-//        present(alert, animated: true, completion: nil)
-//    }
+    func sendAlertWithExitOption(info: String) {
+        if !alert.isBeingPresented {
+            alert = UIAlertController(title: info, message: "Press 'Exit' to exit this game.", preferredStyle: .alert)
+            
+            let okayAction = UIAlertAction(title: "Okay", style: .cancel, handler: nil)
+            
+            let exitAction = UIAlertAction(title: "Exit", style: .default, handler: { (Void) in
+                let fakeButton = UIButton()
+                self.onTappedExit(fakeButton)
+            })
+            
+            alert.addAction(okayAction)
+            alert.addAction(exitAction)
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    //===========================================
+    // Handles presenting an alert when the
+    // peer has requested a rematch
+    //===========================================
+    func rematchAlert() {
+        if !alert.isBeingPresented {
+            alert = UIAlertController(title: "\(peerName) would like a rematch!", message: "Tap 'Accept' to accept their challenge!", preferredStyle: .alert)
+            
+            let accept = UIAlertAction(title: "Accept", style: .default, handler: { (Void) in
+                self.safetyCheck(dataToSend: "ACCEPTED_REMATCH")
+                self.restartGame()
+            })
+            let decline = UIAlertAction(title: "Decline", style: .cancel) { (Void) in
+                self.safetyCheck(dataToSend: "DECLINED_REMATCH")
+            }
+            
+            alert.addAction(accept)
+            alert.addAction(decline)
+            
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    //===========================================
+    // Handles sending data to the peer in a 
+    // safe manner by checking first if the peer 
+    // is still connected
+    //===========================================
+    func safetyCheck(dataToSend: String) {
+        if mpc.session.connectedPeers.count > 0 {
+            mpc.sendData(dataToSend, toPeer: mpc.session.connectedPeers[0])
+        }
+    }
     
     //===========================================
     // Handles dismissing the game view
@@ -177,7 +218,7 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     func dismissSelf() {
         self.dismiss(animated: true) {
             self.mpc.occupiedWithGame = false
-            self.mpc.resetPeerID(toName: self.mpc.peer.displayName)
+            self.mpc.resetPeerID()//toName: self.mpc.peer.displayName)
         }
     }
 }

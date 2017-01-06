@@ -17,6 +17,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var displayNameLabel: UILabel!
     @IBOutlet weak var informationView: UIView!
     
+    var prefferedDisplayName : String?
+    
     //=====================================================
     // VIEW DID LOAD
     //=====================================================
@@ -25,8 +27,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         appDelegate.mpcManager.mainDelegate = self
         appDelegate.mpcManager.browser.startBrowsingForPeers()
         appDelegate.mpcManager.advertiser.startAdvertisingPeer()
+        appDelegate.mpcManager.resetPeerID()
         
         displayNameLabel.text = "your display name: \(appDelegate.mpcManager.peer.displayName)"
+    }
+    
+    func enteredDisplayName() -> String? {
+        return prefferedDisplayName
     }
     
     @IBAction func onTappedQuestion(_ sender: AnyObject) {
@@ -43,9 +50,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         
         let okAction = UIAlertAction(title: "OK", style: .default) { (Void) in
-            let newName = (alert.textFields?.first?.text)!
-            self.displayNameLabel.text = "your display name: \(newName)"
-            self.appDelegate.mpcManager.resetPeerID(toName: newName)
+            self.prefferedDisplayName = (alert.textFields?.first?.text)!
+            self.displayNameLabel.text = "your display name: \(self.prefferedDisplayName)"
+            self.appDelegate.mpcManager.resetPeerID()//toName: self.prefferedDisplayName)
         }
         alert.addAction(okAction)
         

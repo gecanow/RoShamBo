@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		886E773F1E1F370000CC6974 /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E773E1E1F370000CC6974 /* InitialViewController.swift */; };
 		88DD15F41D5679DC000E7169 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DD15F31D5679DC000E7169 /* AppDelegate.swift */; };
 		88DD15F61D5679DC000E7169 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DD15F51D5679DC000E7169 /* ViewController.swift */; };
 		88DD15F91D5679DC000E7169 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88DD15F71D5679DC000E7169 /* Main.storyboard */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		886E773E1E1F370000CC6974 /* InitialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
 		88DD15F01D5679DC000E7169 /* RoShamBo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoShamBo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88DD15F31D5679DC000E7169 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		88DD15F51D5679DC000E7169 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				88DD15F31D5679DC000E7169 /* AppDelegate.swift */,
+				886E773E1E1F370000CC6974 /* InitialViewController.swift */,
 				88DD15F51D5679DC000E7169 /* ViewController.swift */,
 				88DD16211D567A04000E7169 /* MPCManager.swift */,
 				88DD16231D56985D000E7169 /* GameViewController.swift */,
@@ -266,6 +269,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				886E773F1E1F370000CC6974 /* InitialViewController.swift in Sources */,
 				88DD16241D56985D000E7169 /* GameViewController.swift in Sources */,
 				88DD15F61D5679DC000E7169 /* ViewController.swift in Sources */,
 				88DD15F41D5679DC000E7169 /* AppDelegate.swift in Sources */,

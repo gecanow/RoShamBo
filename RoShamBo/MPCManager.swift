@@ -16,6 +16,7 @@ protocol MPCManagerMainDelegate {
     func connectedWithPeer(_ peerID: MCPeerID)
     func connectingWithPeer(_ peerID: MCPeerID)
     func couldNotConnectToSession()
+    func enteredDisplayName() -> String?
 }
 
 // protocol for the game view controller
@@ -38,6 +39,7 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     var gameViewDelegate : MPCManagerGameViewDelegate?
     
     var occupiedWithGame = false
+    var serviceName = "appcodax-mpc"
     
     //=====================================================
     // INIT
@@ -50,10 +52,10 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         session = MCSession(peer: peer)
         session.delegate = self
         
-        browser = MCNearbyServiceBrowser(peer: peer, serviceType: "appcodax-mpc")
+        browser = MCNearbyServiceBrowser(peer: peer, serviceType: serviceName)
         browser.delegate = self
         
-        advertiser = MCNearbyServiceAdvertiser(peer: peer, discoveryInfo: nil, serviceType: "appcodax-mpc")
+        advertiser = MCNearbyServiceAdvertiser(peer: peer, discoveryInfo: nil, serviceType: serviceName)
         advertiser.delegate = self
     }
     
@@ -61,7 +63,9 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     // Handles browsing for other peers
     //=====================================================
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-        foundPeers.append(peerID)
+        if !foundPeers.contains(peerID) {
+            foundPeers.append(peerID)
+        }
         mainDelegate?.reload()
     }
     
@@ -93,15 +97,15 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     //=====================================================
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         if state == .connected {
-            //print("connected to session \(session)")
-            mainDelegate?.connectedWithPeer(peerID)
+            DispatchQueue.main.async(execute: { 
+                self.mainDelegate?.connectedWithPeer(peerID)
+            })
+            //mainDelegate?.connectedWithPeer(peerID)
         } else if state == .connecting {
-            //print("connecting to session \(session)")
             DispatchQueue.main.async(execute: { 
                 self.mainDelegate?.connectingWithPeer(peerID)
             })
         } else {
-            //print("could not connect to session \(session)")
             DispatchQueue.main.async(execute: {
                 
                 if self.occupiedWithGame {
@@ -151,22 +155,10 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: Error?){
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    func resetPeerID(toName: String) {
+    //=====================================================
+    // Handles RESETING YOUR PEER ID
+    //=====================================================
+    func resetPeerID() { //toName: String) {
         // first tell the advertiser to stop and the browser to stop
         advertiser.stopAdvertisingPeer()
         browser.stopBrowsingForPeers()
@@ -176,15 +168,15 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         mainDelegate?.reload()
         
         // then reset everything else (all from viewDidLoad function)
-        peer = MCPeerID(displayName: toName)
+        peer = MCPeerID(displayName: (mainDelegate?.enteredDisplayName())!)
         
         session = MCSession(peer: peer)
         session.delegate = self
         
-        browser = MCNearbyServiceBrowser(peer: peer, serviceType: "appcodax-mpc")
+        browser = MCNearbyServiceBrowser(peer: peer, serviceType: serviceName)
         browser.delegate = self
         
-        advertiser = MCNearbyServiceAdvertiser(peer: peer, discoveryInfo: nil, serviceType: "appcodax-mpc")
+        advertiser = MCNearbyServiceAdvertiser(peer: peer, discoveryInfo: nil, serviceType: serviceName)
         advertiser.delegate = self
         
         // then re-advertise and re-browse
