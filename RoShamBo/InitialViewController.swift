@@ -15,6 +15,13 @@ class InitialViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         displayNameTextField.delegate = self
+        
+        if (UserDefaults.standard.object(forKey: "displayName") as! String) != "" {
+            displayNameTextField.text = UserDefaults.standard.object(forKey: "displayName") as? String
+            DispatchQueue.main.async {
+                self.performSegue(withIdentifier: "mainScreenSegue", sender: nil)
+            }
+        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -23,7 +30,6 @@ class InitialViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let mvc = segue.destination as! ViewController
-        mvc.prefferedDisplayName = displayNameTextField.text
+        UserDefaults.standard.set(displayNameTextField.text, forKey: "displayName")
     }
 }

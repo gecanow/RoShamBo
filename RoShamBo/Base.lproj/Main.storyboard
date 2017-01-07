@@ -86,7 +86,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CWv-Fp-q7T" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="M3T-y8-seh" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1865" y="-352"/>
+            <point key="canvasLocation" x="1865" y="-358"/>
         </scene>
         <!--Initial View Controller-->
         <scene sceneID="3tb-NT-dS3">
@@ -145,12 +145,12 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y1p-Sf-z0r">
-                                        <rect key="frame" x="8" y="8" width="225" height="30"/>
+                                        <rect key="frame" x="8" y="6" width="225" height="34"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                        <state key="normal" title="then click to continue"/>
+                                        <state key="normal" title="then click here to continue"/>
                                         <connections>
-                                            <segue destination="BYZ-38-t0r" kind="show" id="ZN8-hS-4h5"/>
+                                            <segue destination="BYZ-38-t0r" kind="show" identifier="mainScreenSegue" id="ZN8-hS-4h5"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -415,6 +415,7 @@
                         <outlet property="informationView" destination="o0D-uC-Fhe" id="RQ2-RS-zmh"/>
                         <outlet property="tablePeers" destination="cs5-WF-q6T" id="gke-jK-oVq"/>
                         <segue destination="t9x-QB-EMw" kind="show" identifier="gameSegue" id="Tcj-U9-v4f"/>
+                        <segue destination="a09-8q-F40" kind="show" identifier="tictactoeSegue" id="p8w-oS-1kH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -576,6 +577,181 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qZy-GM-mQ7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1864.8" y="286.50674662668666"/>
+        </scene>
+        <!--Tic Tac Toe View Controller-->
+        <scene sceneID="kEr-gP-ROo">
+            <objects>
+                <viewController id="a09-8q-F40" customClass="TicTacToeViewController" customModule="RoShamBo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="NLr-uj-qfK"/>
+                        <viewControllerLayoutGuide type="bottom" id="6UG-kd-mkL"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="OJs-oS-kbc">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tju-Bf-vq5">
+                                <rect key="frame" x="62" y="310" width="250" height="250"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DXQ-EL-KUZ" customClass="Cell" customModule="RoShamBo" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                        <state key="normal" title="open"/>
+                                        <connections>
+                                            <action selector="onTappedCell:" destination="a09-8q-F40" eventType="touchUpInside" id="Suo-rU-cmA"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tUT-Qq-zd7" customClass="Cell" customModule="RoShamBo" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="85" width="80" height="80"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                        <state key="normal" title="open"/>
+                                        <connections>
+                                            <action selector="onTappedCell:" destination="a09-8q-F40" eventType="touchUpInside" id="t6U-Kx-UaR"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hdp-eX-Emf" customClass="Cell" customModule="RoShamBo" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="170" width="80" height="80"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                        <state key="normal" title="open"/>
+                                        <connections>
+                                            <action selector="onTappedCell:" destination="a09-8q-F40" eventType="touchUpInside" id="MPF-Jc-Ab8"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EKe-4x-IQU" customClass="Cell" customModule="RoShamBo" customModuleProvider="target">
+                                        <rect key="frame" x="85" y="170" width="80" height="80"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                        <state key="normal" title="open"/>
+                                        <connections>
+                                            <action selector="onTappedCell:" destination="a09-8q-F40" eventType="touchUpInside" id="dmf-Ct-B88"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vhc-Wx-iOr" customClass="Cell" customModule="RoShamBo" customModuleProvider="target">
+                                        <rect key="frame" x="85" y="85" width="80" height="80"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                        <state key="normal" title="open"/>
+                                        <connections>
+                                            <action selector="onTappedCell:" destination="a09-8q-F40" eventType="touchUpInside" id="TKn-2d-2tU"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="98x-oV-mdR" customClass="Cell" customModule="RoShamBo" customModuleProvider="target">
+                                        <rect key="frame" x="170" y="85" width="80" height="80"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                        <state key="normal" title="open"/>
+                                        <connections>
+                                            <action selector="onTappedCell:" destination="a09-8q-F40" eventType="touchUpInside" id="cYa-uW-xSk"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KDQ-0a-J2X" customClass="Cell" customModule="RoShamBo" customModuleProvider="target">
+                                        <rect key="frame" x="85" y="0.0" width="80" height="80"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                        <state key="normal" title="open"/>
+                                        <connections>
+                                            <action selector="onTappedCell:" destination="a09-8q-F40" eventType="touchUpInside" id="yWB-Vq-9fN"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ymp-ZH-XXD" customClass="Cell" customModule="RoShamBo" customModuleProvider="target">
+                                        <rect key="frame" x="170" y="0.0" width="80" height="80"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                        <state key="normal" title="open"/>
+                                        <connections>
+                                            <action selector="onTappedCell:" destination="a09-8q-F40" eventType="touchUpInside" id="Fpk-Gx-j5o"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tzk-Ac-Xfb" customClass="Cell" customModule="RoShamBo" customModuleProvider="target">
+                                        <rect key="frame" x="170" y="170" width="80" height="80"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                        <state key="normal" title="open"/>
+                                        <connections>
+                                            <action selector="onTappedCell:" destination="a09-8q-F40" eventType="touchUpInside" id="awl-kc-jHl"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="it is your turn to place an X:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LLJ-8E-vEz">
+                                <rect key="frame" x="76" y="233" width="222" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mt3-G8-zPp">
+                                <rect key="frame" x="16" y="20" width="95" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dbo-pd-oec">
+                                        <rect key="frame" x="20" y="3" width="55" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="exit"/>
+                                        <connections>
+                                            <action selector="onTappedExit:" destination="a09-8q-F40" eventType="touchUpInside" id="EQU-Ev-tln"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l1J-Vy-98T">
+                                <rect key="frame" x="264" y="20" width="95" height="36"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iez-wL-aTF">
+                                        <rect key="frame" x="8" y="3" width="79" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="rematch"/>
+                                        <connections>
+                                            <action selector="onTappedRematch:" destination="a09-8q-F40" eventType="touchUpInside" id="hJp-o3-dIV"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="play TicTacToe by tapping on one of the cells below!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="It8-gI-HJm">
+                                <rect key="frame" x="61" y="81" width="252" height="133"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="cell0" destination="DXQ-EL-KUZ" id="Cye-rd-9Fr"/>
+                        <outlet property="cell1" destination="KDQ-0a-J2X" id="OS9-fn-2EI"/>
+                        <outlet property="cell2" destination="ymp-ZH-XXD" id="tff-UW-Wcl"/>
+                        <outlet property="cell3" destination="tUT-Qq-zd7" id="QH5-qZ-Zyy"/>
+                        <outlet property="cell4" destination="Vhc-Wx-iOr" id="yUg-PP-h0A"/>
+                        <outlet property="cell5" destination="98x-oV-mdR" id="rUb-rZ-8ab"/>
+                        <outlet property="cell6" destination="hdp-eX-Emf" id="sgx-bq-BIZ"/>
+                        <outlet property="cell7" destination="EKe-4x-IQU" id="695-PC-0vt"/>
+                        <outlet property="cell8" destination="Tzk-Ac-Xfb" id="g02-nG-LEI"/>
+                        <outlet property="rematchButton" destination="iez-wL-aTF" id="Grl-UK-57i"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="O7d-i4-bSN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1116" y="1099"/>
         </scene>
     </scenes>
 </document>

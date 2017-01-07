@@ -17,8 +17,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var displayNameLabel: UILabel!
     @IBOutlet weak var informationView: UIView!
     
-    var prefferedDisplayName : String?
-    
     //=====================================================
     // VIEW DID LOAD
     //=====================================================
@@ -27,19 +25,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         appDelegate.mpcManager.mainDelegate = self
         appDelegate.mpcManager.browser.startBrowsingForPeers()
         appDelegate.mpcManager.advertiser.startAdvertisingPeer()
-        appDelegate.mpcManager.resetPeerID()
-        
-        displayNameLabel.text = "your display name: \(appDelegate.mpcManager.peer.displayName)"
+        changeDisplayTo(name: UserDefaults.standard.object(forKey: "displayName") as! String)
     }
     
-    func enteredDisplayName() -> String? {
-        return prefferedDisplayName
-    }
-    
+    //=====================================================
+    // Handles when the user taps the question mark
+    //=====================================================
     @IBAction func onTappedQuestion(_ sender: AnyObject) {
         informationView.isHidden = !informationView.isHidden
     }
     
+    //=====================================================
+    // Handles when the user wants to change their 
+    // display name
+    //=====================================================
     @IBAction func onTappedEdit(_ sender: AnyObject) {
         let ti = "Please enter a display name."
         let me = "This will be the name by which your friends can find you."
@@ -50,9 +49,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         
         let okAction = UIAlertAction(title: "OK", style: .default) { (Void) in
-            self.prefferedDisplayName = (alert.textFields?.first?.text)!
-            self.displayNameLabel.text = "your display name: \(self.prefferedDisplayName)"
-            self.appDelegate.mpcManager.resetPeerID()//toName: self.prefferedDisplayName)
+            self.changeDisplayTo(name: (alert.textFields?.first?.text)!)
         }
         alert.addAction(okAction)
         
@@ -60,6 +57,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         alert.addAction(cancelAction)
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    //=====================================================
+    // A helper function which handles changing both the 
+    // internal display name and the display name which 
+    // appears on the GUI
+    //=====================================================
+    func changeDisplayTo(name: String) {
+        appDelegate.mpcManager.resetPeerID(toName: name)
+        displayNameLabel.text = "your display name: \(name)"
     }
     
     //=====================================================
@@ -76,9 +83,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func invitationWasReceived(_ fromPeer: String) {
-        let title = "\(fromPeer) would like to connect with you."
-        let message = "Tap 'Accept' to connect or 'Decline' to reject."
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        var title = "\(fromPeer) would like to connect with you to play "
+        if appDelegate.mpcManager.gameChosen == .RSB {
+            title += "RoShamBo."
+        } else {
+            title += "TicTacToe."
+        }
+        
+        let alert = UIAlertController(title: title, message: "Tap 'Accept' to connect or 'Decline' to reject.", preferredStyle: .alert)
         
         let acceptAction = UIAlertAction(title: "Accept", style: .default) { (Void) in
             self.appDelegate.mpcManager.inviteHandler(true, self.appDelegate.mpcManager.session)
@@ -95,7 +107,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func connectedWithPeer(_ peerID: MCPeerID) {
         self.dismiss(animated: true) {
-            self.performSegue(withIdentifier: "gameSegue", sender: self)
+            self.appDelegate.mpcManager.advertiser.stopAdvertisingPeer()
+            
+            if self.appDelegate.mpcManager.gameChosen == .RSB {
+                self.performSegue(withIdentifier: "gameSegue", sender: self)
+            } else {
+                self.performSegue(withIdentifier: "tictactoeSegue", sender: self)
+            }
         }
     }
     
@@ -132,7 +150,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //=====================================================
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedPeer = appDelegate.mpcManager.foundPeers[(indexPath as NSIndexPath).row] as MCPeerID
-        appDelegate.mpcManager.browser.invitePeer(selectedPeer, to: appDelegate.mpcManager.session, withContext: nil, timeout: 20)
+        
+        let actionSheet = UIAlertController(title: "Which game would you like to play with \(selectedPeer.displayName)?", message: "Tap on an option below.", preferredStyle: .actionSheet)
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        actionSheet.addAction(cancel)
+        
+        let rsb = UIAlertAction(title: "RoShamBo", style: .default) { (Void) in
+            self.appDelegate.mpcManager.gameChosen = .RSB
+            let myData = "RSB".data(using: .ascii)
+            self.appDelegate.mpcManager.browser.invitePeer(selectedPeer, to: self.appDelegate.mpcManager.session, withContext: myData, timeout: 20)
+        }
+        actionSheet.addAction(rsb)
+        
+        let ttt = UIAlertAction(title: "TicTacToe", style: .default) { (Void) in
+            self.appDelegate.mpcManager.gameChosen = .TTT
+            let myData = "TTT".data(using: .ascii)
+            self.appDelegate.mpcManager.browser.invitePeer(selectedPeer, to: self.appDelegate.mpcManager.session, withContext: myData, timeout: 20)
+        }
+        actionSheet.addAction(ttt)
+        
+        self.present(actionSheet, animated: true, completion: nil)
+        
+        //appDelegate.mpcManager.browser.invitePeer(selectedPeer, to: appDelegate.mpcManager.session, withContext: nil, timeout: 20)
     }
     
     //=====================================================

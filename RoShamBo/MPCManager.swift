@@ -16,13 +16,17 @@ protocol MPCManagerMainDelegate {
     func connectedWithPeer(_ peerID: MCPeerID)
     func connectingWithPeer(_ peerID: MCPeerID)
     func couldNotConnectToSession()
-    func enteredDisplayName() -> String?
 }
 
 // protocol for the game view controller
 protocol MPCManagerGameViewDelegate {
     func received(_ data: NSString)
     func peerExitedGame()
+}
+
+enum GameChoice {
+    case RSB
+    case TTT
 }
 
 class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNearbyServiceAdvertiserDelegate {
@@ -39,6 +43,7 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     var gameViewDelegate : MPCManagerGameViewDelegate?
     
     var occupiedWithGame = false
+    var gameChosen = GameChoice.RSB
     var serviceName = "appcodax-mpc"
     
     //=====================================================
@@ -73,7 +78,9 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         if let index = foundPeers.index(of: peerID) {
             foundPeers.remove(at: index)
         }
-        mainDelegate?.reload()
+        DispatchQueue.main.async {
+            self.mainDelegate?.reload()
+        }
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
@@ -85,6 +92,13 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     //=====================================================
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         self.inviteHandler = invitationHandler
+        
+        if context == "RSB".data(using: .ascii) {
+            gameChosen = .RSB
+        } else {
+            gameChosen = .TTT
+        }
+        
         mainDelegate?.invitationWasReceived(peerID.displayName)
     }
     
@@ -100,14 +114,12 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
             DispatchQueue.main.async(execute: { 
                 self.mainDelegate?.connectedWithPeer(peerID)
             })
-            //mainDelegate?.connectedWithPeer(peerID)
         } else if state == .connecting {
             DispatchQueue.main.async(execute: { 
                 self.mainDelegate?.connectingWithPeer(peerID)
             })
         } else {
             DispatchQueue.main.async(execute: {
-                
                 if self.occupiedWithGame {
                     self.gameViewDelegate?.peerExitedGame()
                 } else {
@@ -158,7 +170,7 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     //=====================================================
     // Handles RESETING YOUR PEER ID
     //=====================================================
-    func resetPeerID() { //toName: String) {
+    func resetPeerID(toName: String) {
         // first tell the advertiser to stop and the browser to stop
         advertiser.stopAdvertisingPeer()
         browser.stopBrowsingForPeers()
@@ -168,7 +180,8 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         mainDelegate?.reload()
         
         // then reset everything else (all from viewDidLoad function)
-        peer = MCPeerID(displayName: (mainDelegate?.enteredDisplayName())!)
+        peer = MCPeerID(displayName: toName)
+        UserDefaults.standard.set(toName, forKey: "displayName")
         
         session = MCSession(peer: peer)
         session.delegate = self

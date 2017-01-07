@@ -1,30 +1,33 @@
 //
-//  GameViewController.swift
+//  TicTacToeViewController.swift
 //  RoShamBo
 //
-//  Created by Gaby Ecanow on 8/6/16.
-//  Copyright © 2016 Gaby Ecanow. All rights reserved.
+//  Created by Gaby Ecanow on 1/6/17.
+//  Copyright © 2017 Gaby Ecanow. All rights reserved.
 //
 
 import UIKit
 
-class GameViewController: UIViewController, MPCManagerGameViewDelegate {
+class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
     
-    @IBOutlet weak var winnerLabel: UILabel!
-    @IBOutlet weak var choiceLabel: UILabel!
-    @IBOutlet weak var rockButton: UIButton!
-    @IBOutlet weak var paperButton: UIButton!
-    @IBOutlet weak var scissorsButton: UIButton!
     @IBOutlet weak var rematchButton: UIButton!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
-    var myChoice = ""
-    var theirChoice = ""
-    
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var mpc : MPCManager!
     var peerName = ""
     var alert = UIAlertController()
+    
+    var mySign : String!
+    var notMySign : String!
+    @IBOutlet weak var cell0: Cell!
+    @IBOutlet weak var cell1: Cell!
+    @IBOutlet weak var cell2: Cell!
+    @IBOutlet weak var cell3: Cell!
+    @IBOutlet weak var cell4: Cell!
+    @IBOutlet weak var cell5: Cell!
+    @IBOutlet weak var cell6: Cell!
+    @IBOutlet weak var cell7: Cell!
+    @IBOutlet weak var cell8: Cell!
+    var cellArray : [Cell]!
     
     //===========================================
     // VIEW DID LOAD
@@ -37,46 +40,20 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
         mpc.advertiser.stopAdvertisingPeer()
         mpc.occupiedWithGame = true
         
-        activityIndicator.isHidden = true
         peerName = mpc.session.connectedPeers[0].displayName
+        
+        
+        if mpc.peer.displayName < peerName {
+            mySign = "X"
+            notMySign = "O"
+        } else {
+            mySign = "O"
+            notMySign = "X"
+        }
+        cellArray = [cell0, cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8]
     }
     
     func restartGame() {
-        myChoice = ""
-        theirChoice = ""
-        
-        activityIndicator.isHidden = true
-        
-        winnerLabel.text = "rematch has begun!"
-        choiceLabel.text = "you chose: ? | they chose: ?"
-        
-        rockButton.isEnabled = true
-        paperButton.isEnabled = true
-        scissorsButton.isEnabled = true
-        
-        rematchButton.isEnabled = false
-    }
-    
-    //===========================================
-    // Handles when the user taps rock, paper,
-    // or scissors
-    //===========================================
-    @IBAction func onTappedOption(_ sender: UIButton) {
-        myChoice = (sender.currentTitle?.uppercased())!
-        
-        rockButton.isEnabled = false
-        paperButton.isEnabled = false
-        scissorsButton.isEnabled = false
-        
-        winnerLabel.text = "Determining Winner"
-        activityIndicator.isHidden = false
-        activityIndicator.startAnimating()
-        
-        safetyCheck(dataToSend: myChoice)
-        
-        DispatchQueue.main.async { 
-            self.determineWinner()
-        }
     }
     
     //===========================================
@@ -93,6 +70,46 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     @IBAction func onTappedRematch(_ sender: UIButton) {
         safetyCheck(dataToSend: "REMATCH")
     }
+
+    //===========================================
+    // Enables all the buttons to
+    // allow you to go
+    //===========================================
+    func itsMyTurn() {
+        for cell in cellArray {
+            if cell.open { cell.isEnabled = true }
+        }
+        
+        // then make the label say it's your turn
+        
+    }
+    
+    //===========================================
+    // Handles when any cell is tapped
+    //===========================================
+    @IBAction func onTappedCell(_ sender: Cell) {
+        sender.setTitle(mySign, for: .normal)
+        sender.open = false
+        safetyCheck(dataToSend: String(sender.number))
+        
+        for cell in cellArray {
+            cell.isEnabled = false
+        }
+        
+        let _ = determineWinner()
+    }
+    
+    //===========================================
+    // Handles when they tapped a cell
+    //===========================================
+    func theyTappedCell(number: Int) {
+        cellArray[number].open = false
+        cellArray[number].setTitle(notMySign, for: .normal)
+        
+        if !determineWinner() {
+            itsMyTurn()
+        }
+    }
     
     //===========================================
     // Delegate function: is called when the
@@ -103,51 +120,26 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
         if data.isEqual(to: "EXIT") {
             peerExitedGame()
         } else if data.isEqual(to: "REMATCH") {
-            rematchAlert()
+            // they want a rematch
         } else if data.isEqual(to: "ACCEPTED_REMATCH") {
-            DispatchQueue.main.async(execute: { 
-                self.restartGame()
-            })
+            // they accepted your rematch
         } else if data.isEqual(to: "DECLINED_REMATCH") {
-            sendAlertWithExitOption(info: "\(peerName) declined your rematch.")
-        } else if data.isEqual(to: "ROCK") {
-            theirChoice = "ROCK"
-        } else if data.isEqual(to: "PAPER") {
-            theirChoice = "PAPER"
+            // they declined your rematch
         } else {
-            theirChoice = "SCISSORS"
+            DispatchQueue.main.async(execute: { 
+                self.theyTappedCell(number: data.integerValue)
+            })
         }
-        
-        DispatchQueue.main.async(execute: {
-            self.determineWinner()
-        })
     }
     
     //===========================================
     // Determines the winner
     //===========================================
-    func determineWinner() {
+    func determineWinner() -> Bool {
         
-        if (myChoice != "" && theirChoice != "") {
-            
-            activityIndicator.stopAnimating()
-            activityIndicator.isHidden = true
-            
-            if myChoice == theirChoice {
-                winnerLabel.text = "Tie Game!"
-            } else if (myChoice == "ROCK" && theirChoice == "SCISSORS") ||
-                      (myChoice == "SCISSORS" && theirChoice == "PAPER") ||
-                      (myChoice == "PAPER" && theirChoice == "ROCK") {
-                winnerLabel.text = "You Win!"
-            } else {
-                winnerLabel.text = "You Lose!"
-            }
-            
-            choiceLabel.text = "you chose: \(myChoice.lowercased()) | they chose: \(theirChoice.lowercased())"
-            
-            rematchButton.isEnabled = true
-            
-        }
+        // *** DETERMINE THE WINNER HERE *** //
+        
+        return false
     }
     
     //===========================================
@@ -160,8 +152,8 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     }
     
     //===========================================
-    // Handles sending an alert with title 
-    // "info" and an OKAY option and as EXIT 
+    // Handles sending an alert with title
+    // "info" and an OKAY option and as EXIT
     // option
     //===========================================
     func sendAlertWithExitOption(info: String) {
@@ -205,8 +197,8 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     }
     
     //===========================================
-    // Handles sending data to the peer in a 
-    // safe manner by checking first if the peer 
+    // Handles sending data to the peer in a
+    // safe manner by checking first if the peer
     // is still connected
     //===========================================
     func safetyCheck(dataToSend: String) {

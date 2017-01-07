@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		886E773F1E1F370000CC6974 /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886E773E1E1F370000CC6974 /* InitialViewController.swift */; };
+		88B2F0011E205D2700A241D8 /* TicTacToeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B2F0001E205D2700A241D8 /* TicTacToeViewController.swift */; };
+		88B2F0031E205F8500A241D8 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B2F0021E205F8500A241D8 /* Cell.swift */; };
 		88DD15F41D5679DC000E7169 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DD15F31D5679DC000E7169 /* AppDelegate.swift */; };
 		88DD15F61D5679DC000E7169 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DD15F51D5679DC000E7169 /* ViewController.swift */; };
 		88DD15F91D5679DC000E7169 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 88DD15F71D5679DC000E7169 /* Main.storyboard */; };
@@ -38,6 +40,8 @@
 
 /* Begin PBXFileReference section */
 		886E773E1E1F370000CC6974 /* InitialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
+		88B2F0001E205D2700A241D8 /* TicTacToeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicTacToeViewController.swift; sourceTree = "<group>"; };
+		88B2F0021E205F8500A241D8 /* Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		88DD15F01D5679DC000E7169 /* RoShamBo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoShamBo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		88DD15F31D5679DC000E7169 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		88DD15F51D5679DC000E7169 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -106,8 +110,10 @@
 				88DD15F31D5679DC000E7169 /* AppDelegate.swift */,
 				886E773E1E1F370000CC6974 /* InitialViewController.swift */,
 				88DD15F51D5679DC000E7169 /* ViewController.swift */,
-				88DD16211D567A04000E7169 /* MPCManager.swift */,
 				88DD16231D56985D000E7169 /* GameViewController.swift */,
+				88B2F0001E205D2700A241D8 /* TicTacToeViewController.swift */,
+				88B2F0021E205F8500A241D8 /* Cell.swift */,
+				88DD16211D567A04000E7169 /* MPCManager.swift */,
 				88DD15F71D5679DC000E7169 /* Main.storyboard */,
 				88DD15FA1D5679DC000E7169 /* Assets.xcassets */,
 				88DD15FC1D5679DC000E7169 /* LaunchScreen.storyboard */,
@@ -271,7 +277,9 @@
 			files = (
 				886E773F1E1F370000CC6974 /* InitialViewController.swift in Sources */,
 				88DD16241D56985D000E7169 /* GameViewController.swift in Sources */,
+				88B2F0031E205F8500A241D8 /* Cell.swift in Sources */,
 				88DD15F61D5679DC000E7169 /* ViewController.swift in Sources */,
+				88B2F0011E205D2700A241D8 /* TicTacToeViewController.swift in Sources */,
 				88DD15F41D5679DC000E7169 /* AppDelegate.swift in Sources */,
 				88DD16221D567A04000E7169 /* MPCManager.swift in Sources */,
 			);
