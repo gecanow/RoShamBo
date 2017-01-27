@@ -12,6 +12,7 @@ class Cell: UIButton {
     
     var number = 0
     var open = true
+    var text = ""
     
     convenience init(tag: Int) {
         self.init()

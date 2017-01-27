@@ -16,6 +16,9 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
     var peerName = ""
     var alert = UIAlertController()
     
+    @IBOutlet weak var mainText: UILabel!
+    @IBOutlet weak var smallText: UILabel!
+    
     var mySign : String!
     var notMySign : String!
     @IBOutlet weak var cell0: Cell!
@@ -42,6 +45,10 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
         
         peerName = mpc.session.connectedPeers[0].displayName
         
+        cellArray = [cell0, cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8]
+        for num in 0...8 {
+            cellArray[num].number = num
+        }
         
         if mpc.peer.displayName < peerName {
             mySign = "X"
@@ -50,10 +57,15 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
             mySign = "O"
             notMySign = "X"
         }
-        cellArray = [cell0, cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8]
+        smallText.text = "it is your turn to place an \(mySign):"
     }
     
     func restartGame() {
+        for cell in cellArray {
+            cell.isEnabled = true
+            cell.open = true
+            cell.text = ""
+        }
     }
     
     //===========================================
@@ -70,19 +82,6 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
     @IBAction func onTappedRematch(_ sender: UIButton) {
         safetyCheck(dataToSend: "REMATCH")
     }
-
-    //===========================================
-    // Enables all the buttons to
-    // allow you to go
-    //===========================================
-    func itsMyTurn() {
-        for cell in cellArray {
-            if cell.open { cell.isEnabled = true }
-        }
-        
-        // then make the label say it's your turn
-        
-    }
     
     //===========================================
     // Handles when any cell is tapped
@@ -90,6 +89,7 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
     @IBAction func onTappedCell(_ sender: Cell) {
         sender.setTitle(mySign, for: .normal)
         sender.open = false
+        sender.text = mySign
         safetyCheck(dataToSend: String(sender.number))
         
         for cell in cellArray {
@@ -103,11 +103,14 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
     // Handles when they tapped a cell
     //===========================================
     func theyTappedCell(number: Int) {
-        cellArray[number].open = false
         cellArray[number].setTitle(notMySign, for: .normal)
+        cellArray[number].open = false
+        cellArray[number].text = notMySign
         
         if !determineWinner() {
-            itsMyTurn()
+            for cell in cellArray {
+                if !cell.open { cell.isEnabled = false }
+            }
         }
     }
     
@@ -136,10 +139,76 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
     // Determines the winner
     //===========================================
     func determineWinner() -> Bool {
-        
-        // *** DETERMINE THE WINNER HERE *** //
-        
+        if checkCells(cellArray[0], gl2: cellArray[1], gl3: cellArray[2]) {
+            endGame(winningSign: cellArray[0].text)
+            return true
+        } else if checkCells(cellArray[3], gl2: cellArray[4], gl3: cellArray[5]) {
+            endGame(winningSign: cellArray[3].text)
+            return true
+        } else if checkCells(cellArray[6], gl2: cellArray[7], gl3: cellArray[8]) {
+            endGame(winningSign: cellArray[6].text)
+            return true
+        } else if checkCells(cellArray[0], gl2: cellArray[3], gl3: cellArray[6]) {
+            endGame(winningSign: cellArray[0].text)
+            return true
+        } else if checkCells(cellArray[1], gl2: cellArray[4], gl3: cellArray[7]) {
+            endGame(winningSign: cellArray[1].text)
+            return true
+        } else if checkCells(cellArray[2], gl2: cellArray[5], gl3: cellArray[8]) {
+            endGame(winningSign: cellArray[2].text)
+            return true
+        } else if checkCells(cellArray[0], gl2: cellArray[4], gl3: cellArray[8]) {
+            endGame(winningSign: cellArray[0].text)
+            return true
+        } else if checkCells(cellArray[2], gl2: cellArray[4], gl3: cellArray[6]) {
+            endGame(winningSign: cellArray[2].text)
+            return true
+        } else if gameIsOver() {
+            endGame(winningSign: "Cat's Game")
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    //=============================================
+    // Checks three cells and returns true
+    // if they are all the same
+    //=============================================
+    func checkCells(_ gl1: Cell, gl2: Cell, gl3: Cell) -> Bool {
+        if gl1.text == gl2.text && gl1.text == gl3.text {
+            return true
+        }
         return false
+    }
+    
+    //=============================================
+    // Returns true is the game is over
+    //=============================================
+    func gameIsOver() -> Bool {
+        for cell in cellArray {
+            if cell.open { return false }
+        }
+        return true
+    }
+    
+    //=============================================
+    // Handles when a game is over
+    //=============================================
+    func endGame(winningSign: String) {
+        for cell in cellArray {
+            cell.isEnabled = false
+        }
+        rematchButton.isEnabled = true
+        
+        // update the text here
+        if winningSign == "Cat's Game" {
+            mainText.text = "Cat's Game"
+        } else if winningSign == mySign {
+            mainText.text = "You Win!"
+        } else {
+            mainText.text = "You Lose"
+        }
     }
     
     //===========================================
