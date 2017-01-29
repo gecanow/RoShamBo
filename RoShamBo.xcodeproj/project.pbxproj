@@ -109,11 +109,11 @@
 			children = (
 				88DD15F31D5679DC000E7169 /* AppDelegate.swift */,
 				886E773E1E1F370000CC6974 /* InitialViewController.swift */,
+				88DD16211D567A04000E7169 /* MPCManager.swift */,
 				88DD15F51D5679DC000E7169 /* ViewController.swift */,
 				88DD16231D56985D000E7169 /* GameViewController.swift */,
 				88B2F0001E205D2700A241D8 /* TicTacToeViewController.swift */,
 				88B2F0021E205F8500A241D8 /* Cell.swift */,
-				88DD16211D567A04000E7169 /* MPCManager.swift */,
 				88DD15F71D5679DC000E7169 /* Main.storyboard */,
 				88DD15FA1D5679DC000E7169 /* Assets.xcassets */,
 				88DD15FC1D5679DC000E7169 /* LaunchScreen.storyboard */,

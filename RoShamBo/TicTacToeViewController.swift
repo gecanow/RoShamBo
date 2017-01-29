@@ -21,6 +21,7 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
     
     var mySign : String!
     var notMySign : String!
+    var doIStart : Bool!
     @IBOutlet weak var cell0: Cell!
     @IBOutlet weak var cell1: Cell!
     @IBOutlet weak var cell2: Cell!
@@ -50,21 +51,30 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
             cellArray[num].number = num
         }
         
-        if mpc.peer.displayName < peerName {
+        if doIStart! {
             mySign = "X"
             notMySign = "O"
+            smallText.text = "it is your turn to place an \(mySign!):"
         } else {
             mySign = "O"
             notMySign = "X"
+            smallText.text = "they start"
         }
-        smallText.text = "it is your turn to place an \(mySign):"
     }
     
     func restartGame() {
+        mainText.text = "play TicTacToe by tapping on one of the cells below!"
         for cell in cellArray {
-            cell.isEnabled = true
+            if doIStart! {
+                smallText.text = "it is your turn to place an \(mySign!):"
+                cell.isEnabled = true
+            } else {
+                smallText.text = "their turn"
+                cell.isEnabled = false
+            }
             cell.open = true
             cell.text = ""
+            cell.setTitle("", for: .normal)
         }
     }
     
@@ -87,6 +97,7 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
     // Handles when any cell is tapped
     //===========================================
     @IBAction func onTappedCell(_ sender: Cell) {
+        smallText.text = "their turn"
         sender.setTitle(mySign, for: .normal)
         sender.open = false
         sender.text = mySign
@@ -108,8 +119,11 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
         cellArray[number].text = notMySign
         
         if !determineWinner() {
+            // it's my turn
+            smallText.text = "it is your turn to place an \(mySign!):"
             for cell in cellArray {
-                if !cell.open { cell.isEnabled = false }
+                if cell.open { cell.isEnabled = true }
+                else { cell.isEnabled = false }
             }
         }
     }
@@ -123,11 +137,14 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
         if data.isEqual(to: "EXIT") {
             peerExitedGame()
         } else if data.isEqual(to: "REMATCH") {
-            // they want a rematch
+            rematchAlert()
         } else if data.isEqual(to: "ACCEPTED_REMATCH") {
-            // they accepted your rematch
+            DispatchQueue.main.async(execute: {
+                self.doIStart = true
+                self.restartGame()
+            })
         } else if data.isEqual(to: "DECLINED_REMATCH") {
-            // they declined your rematch
+            sendAlertWithExitOption(info: "\(peerName) declined your rematch.")
         } else {
             DispatchQueue.main.async(execute: { 
                 self.theyTappedCell(number: data.integerValue)
@@ -176,7 +193,7 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
     // if they are all the same
     //=============================================
     func checkCells(_ gl1: Cell, gl2: Cell, gl3: Cell) -> Bool {
-        if gl1.text == gl2.text && gl1.text == gl3.text {
+        if gl1.text != "" && gl1.text == gl2.text && gl1.text == gl3.text {
             return true
         }
         return false
@@ -200,12 +217,15 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
             cell.isEnabled = false
         }
         rematchButton.isEnabled = true
+        smallText.text = ""
         
         // update the text here
         if winningSign == "Cat's Game" {
             mainText.text = "Cat's Game"
         } else if winningSign == mySign {
             mainText.text = "You Win!"
+            let newScore = UserDefaults.standard.integer(forKey: "TTT-score") + 1
+            UserDefaults.standard.set(newScore, forKey: "TTT-score")
         } else {
             mainText.text = "You Lose"
         }
@@ -252,6 +272,7 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
             
             let accept = UIAlertAction(title: "Accept", style: .default, handler: { (Void) in
                 self.safetyCheck(dataToSend: "ACCEPTED_REMATCH")
+                self.doIStart = false
                 self.restartGame()
             })
             let decline = UIAlertAction(title: "Decline", style: .cancel) { (Void) in

@@ -139,6 +139,8 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
                       (myChoice == "SCISSORS" && theirChoice == "PAPER") ||
                       (myChoice == "PAPER" && theirChoice == "ROCK") {
                 winnerLabel.text = "You Win!"
+                let newScore = UserDefaults.standard.integer(forKey: "RSB-score") + 1
+                UserDefaults.standard.set(newScore, forKey: "RSB-score")
             } else {
                 winnerLabel.text = "You Lose!"
             }

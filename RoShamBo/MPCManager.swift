@@ -37,14 +37,16 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     var advertiser : MCNearbyServiceAdvertiser!
     
     var foundPeers = [MCPeerID]()
-    var inviteHandler : ((Bool, MCSession) -> Void)!
+    var foundPeersRealNames = [String]()
     
+    var inviteHandler : ((Bool, MCSession?) -> Void)!
     var mainDelegate : MPCManagerMainDelegate?
     var gameViewDelegate : MPCManagerGameViewDelegate?
     
     var occupiedWithGame = false
     var gameChosen = GameChoice.RSB
     var serviceName = "appcodax-mpc"
+    let deviceNameDict = ["realName":UIDevice.current.name]
     
     //=====================================================
     // INIT
@@ -59,8 +61,7 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         
         browser = MCNearbyServiceBrowser(peer: peer, serviceType: serviceName)
         browser.delegate = self
-        
-        advertiser = MCNearbyServiceAdvertiser(peer: peer, discoveryInfo: nil, serviceType: serviceName)
+        advertiser = MCNearbyServiceAdvertiser(peer: peer, discoveryInfo: deviceNameDict, serviceType: serviceName)
         advertiser.delegate = self
     }
     
@@ -68,15 +69,32 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     // Handles browsing for other peers
     //=====================================================
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-        if !foundPeers.contains(peerID) {
+        if !foundPeers.contains(peerID) && info!["realName"]! != UIDevice.current.name {
+            // remove all peers with the same device name
+            var ctr = 0
+            while ctr < foundPeersRealNames.count && ctr < foundPeers.count {
+                if foundPeersRealNames[ctr] == info!["realName"]! {
+                    foundPeers.remove(at: ctr)
+                    foundPeersRealNames.remove(at: ctr)
+                } else {
+                    ctr += 1
+                }
+            }
+            
+            // append the device to the found peers array
             foundPeers.append(peerID)
+            foundPeersRealNames.append(info!["realName"]!)
         }
-        mainDelegate?.reload()
+        
+        DispatchQueue.main.async {
+            self.mainDelegate?.reload()
+        }
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
         if let index = foundPeers.index(of: peerID) {
             foundPeers.remove(at: index)
+            foundPeersRealNames.remove(at: index)
         }
         DispatchQueue.main.async {
             self.mainDelegate?.reload()
@@ -172,12 +190,17 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     //=====================================================
     func resetPeerID(toName: String) {
         // first tell the advertiser to stop and the browser to stop
-        advertiser.stopAdvertisingPeer()
-        browser.stopBrowsingForPeers()
+        DispatchQueue.main.async {
+            self.advertiser.stopAdvertisingPeer()
+            self.browser.stopBrowsingForPeers()
+        }
         
         // then set the found peers array to an empty array
         foundPeers = [MCPeerID]()
-        mainDelegate?.reload()
+        foundPeersRealNames = [String]()
+        DispatchQueue.main.async {
+            self.mainDelegate?.reload()
+        }
         
         // then reset everything else (all from viewDidLoad function)
         peer = MCPeerID(displayName: toName)
@@ -189,12 +212,14 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         browser = MCNearbyServiceBrowser(peer: peer, serviceType: serviceName)
         browser.delegate = self
         
-        advertiser = MCNearbyServiceAdvertiser(peer: peer, discoveryInfo: nil, serviceType: serviceName)
+        advertiser = MCNearbyServiceAdvertiser(peer: peer, discoveryInfo: deviceNameDict, serviceType: serviceName)
         advertiser.delegate = self
         
         // then re-advertise and re-browse
-        advertiser.startAdvertisingPeer()
-        browser.startBrowsingForPeers()
+        DispatchQueue.main.async {
+            self.advertiser.startAdvertisingPeer()
+            self.browser.startBrowsingForPeers()
+        }
     }
     
 }

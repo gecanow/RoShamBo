@@ -16,6 +16,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBOutlet weak var displayNameLabel: UILabel!
     @IBOutlet weak var informationView: UIView!
+    @IBOutlet weak var scoreInfoView: UIView!
+    @IBOutlet weak var tttScoreView: UILabel!
+    @IBOutlet weak var rsbScoreView: UILabel!
+    var instigatedGame = true
     
     //=====================================================
     // VIEW DID LOAD
@@ -29,10 +33,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     //=====================================================
+    // VIEW DID APPEAR
+    //=====================================================
+    override func viewDidAppear(_ animated: Bool) {
+        tttScoreView.text = "tictactoe score: \(UserDefaults.standard.integer(forKey: "TTT-score"))"
+        rsbScoreView.text = "roshambo score: \(UserDefaults.standard.integer(forKey: "RSB-score"))"
+    }
+    
+    //=====================================================
     // Handles when the user taps the question mark
     //=====================================================
     @IBAction func onTappedQuestion(_ sender: AnyObject) {
         informationView.isHidden = !informationView.isHidden
+    }
+    @IBAction func onTappedScoreQuestion(_ sender: Any) {
+        scoreInfoView.isHidden = !scoreInfoView.isHidden
     }
     
     //=====================================================
@@ -79,7 +94,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // DELEGATE FUNCTIONS
     //=====================================================
     func reload() {
-        tablePeers.reloadData()
+        DispatchQueue.main.async {
+            self.tablePeers.reloadData()
+        }
     }
     
     func invitationWasReceived(_ fromPeer: String) {
@@ -93,10 +110,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let alert = UIAlertController(title: title, message: "Tap 'Accept' to connect or 'Decline' to reject.", preferredStyle: .alert)
         
         let acceptAction = UIAlertAction(title: "Accept", style: .default) { (Void) in
+            self.instigatedGame = false
             self.appDelegate.mpcManager.inviteHandler(true, self.appDelegate.mpcManager.session)
         }
         let declineAction = UIAlertAction(title: "Decline", style: .cancel) { (Void) in
-            self.appDelegate.mpcManager.inviteHandler(false, self.appDelegate.mpcManager.session) //nil
+            self.appDelegate.mpcManager.inviteHandler(false, nil)
         }
         
         alert.addAction(acceptAction)
@@ -171,8 +189,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         actionSheet.addAction(ttt)
         
         self.present(actionSheet, animated: true, completion: nil)
-        
-        //appDelegate.mpcManager.browser.invitePeer(selectedPeer, to: appDelegate.mpcManager.session, withContext: nil, timeout: 20)
     }
     
     //=====================================================
@@ -183,7 +199,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if sender.isOn {
             appDelegate.mpcManager.advertiser.startAdvertisingPeer()
         } else {
-            appDelegate.mpcManager.advertiser.stopAdvertisingPeer()
+            DispatchQueue.main.async {
+                self.appDelegate.mpcManager.advertiser.stopAdvertisingPeer()
+            }
         }
     }
     
@@ -192,15 +210,25 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // Handles when a session could not be connected to
     //=====================================================
     func couldNotConnectToSession() {
-        let title = "We're Sorry"
-        let message = "The bluetooth/wifi is not working in your area."
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        var message = ""
+        if (self.presentedViewController != nil) {
+            self.dismiss(animated: true) {
+                message = "The bluetooth/wifi is not working in your area."
+            }
+        } else {
+            message = "Your game invitation was declined."
+        }
         
+        let alert = UIAlertController(title: "We're Sorry", message: message, preferredStyle: .alert)
         let okayAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
         alert.addAction(okayAction)
-        
-        self.dismiss(animated: true) {
-            self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "tictactoeSegue" {
+            let dvc = segue.destination as! TicTacToeViewController
+            dvc.doIStart = instigatedGame
         }
     }
     
