@@ -18,6 +18,7 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
     
     @IBOutlet weak var mainText: UILabel!
     @IBOutlet weak var smallText: UILabel!
+    @IBOutlet weak var rematchRequestView: UIView!
     
     var mySign : String!
     var notMySign : String!
@@ -59,11 +60,17 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
             mySign = "O"
             notMySign = "X"
             smallText.text = "they start"
+            
+            for cell in cellArray {
+                cell.isEnabled = false
+            }
         }
     }
     
     func restartGame() {
-        mainText.text = "play TicTacToe by tapping on one of the cells below!"
+        mainText.text = "a rematch has begun!"
+        rematchRequestView.isHidden = true
+        
         for cell in cellArray {
             if doIStart! {
                 smallText.text = "it is your turn to place an \(mySign!):"
@@ -86,11 +93,17 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
         dismissSelf()
     }
     
+    
+    @IBAction func onTappedRematchRequest(_ sender: Any) {
+        rematchRequestView.isHidden = true
+    }
+    
     //===========================================
     // Handles when the user taps rematch
     //===========================================
     @IBAction func onTappedRematch(_ sender: UIButton) {
         safetyCheck(dataToSend: "REMATCH")
+        rematchRequestView.isHidden = false
     }
     
     //===========================================

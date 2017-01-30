@@ -17,6 +17,7 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     @IBOutlet weak var scissorsButton: UIButton!
     @IBOutlet weak var rematchButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var rematchRequestView: UIView!
     
     var myChoice = ""
     var theirChoice = ""
@@ -48,6 +49,7 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
         activityIndicator.isHidden = true
         
         winnerLabel.text = "rematch has begun!"
+        rematchRequestView.isHidden = true
         choiceLabel.text = "you chose: ? | they chose: ?"
         
         rockButton.isEnabled = true
@@ -55,6 +57,10 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
         scissorsButton.isEnabled = true
         
         rematchButton.isEnabled = false
+    }
+    
+    @IBAction func onTappedOkRematchRequest(_ sender: Any) {
+        rematchRequestView.isHidden = true
     }
     
     //===========================================
@@ -92,6 +98,7 @@ class GameViewController: UIViewController, MPCManagerGameViewDelegate {
     //===========================================
     @IBAction func onTappedRematch(_ sender: UIButton) {
         safetyCheck(dataToSend: "REMATCH")
+        rematchRequestView.isHidden = false
     }
     
     //===========================================

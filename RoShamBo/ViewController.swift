@@ -17,6 +17,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var displayNameLabel: UILabel!
     @IBOutlet weak var informationView: UIView!
     @IBOutlet weak var scoreInfoView: UIView!
+    @IBOutlet weak var gameRequestSentView: UIView!
     @IBOutlet weak var tttScoreView: UILabel!
     @IBOutlet weak var rsbScoreView: UILabel!
     var instigatedGame = true
@@ -38,6 +39,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidAppear(_ animated: Bool) {
         tttScoreView.text = "tictactoe score: \(UserDefaults.standard.integer(forKey: "TTT-score"))"
         rsbScoreView.text = "roshambo score: \(UserDefaults.standard.integer(forKey: "RSB-score"))"
+        
+        gameRequestSentView.isHidden = true
+        informationView.isHidden = true
+        scoreInfoView.isHidden = true
     }
     
     //=====================================================
@@ -49,6 +54,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBAction func onTappedScoreQuestion(_ sender: Any) {
         scoreInfoView.isHidden = !scoreInfoView.isHidden
     }
+    
+    //=====================================================
+    // Handles when the user taps "ok" when the game
+    // request sent message is shown
+    //=====================================================
+    @IBAction func onTappedOkRequestSent(_ sender: Any) {
+        gameRequestSentView.isHidden = true
+    }
+    
     
     //=====================================================
     // Handles when the user wants to change their 
@@ -89,6 +103,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // the instructions page
     //=====================================================
     @IBAction func unwindFromInstructions(segue: UIStoryboardSegue) {}
+    
+    //=====================================================
+    // Handles when the user manually reloads the tableview
+    //=====================================================
+    @IBAction func onTappedRefresh(_ sender: Any) {
+        self.reload()
+    }
     
     //=====================================================
     // DELEGATE FUNCTIONS
@@ -178,6 +199,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.appDelegate.mpcManager.gameChosen = .RSB
             let myData = "RSB".data(using: .ascii)
             self.appDelegate.mpcManager.browser.invitePeer(selectedPeer, to: self.appDelegate.mpcManager.session, withContext: myData, timeout: 20)
+            
+            self.gameRequestSentView.isHidden = false
         }
         actionSheet.addAction(rsb)
         
@@ -185,6 +208,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.appDelegate.mpcManager.gameChosen = .TTT
             let myData = "TTT".data(using: .ascii)
             self.appDelegate.mpcManager.browser.invitePeer(selectedPeer, to: self.appDelegate.mpcManager.session, withContext: myData, timeout: 20)
+            
+            self.gameRequestSentView.isHidden = false
         }
         actionSheet.addAction(ttt)
         
@@ -210,11 +235,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // Handles when a session could not be connected to
     //=====================================================
     func couldNotConnectToSession() {
-        var message = ""
+        var message = "The bluetooth/wifi is not working in your area."
         if (self.presentedViewController != nil) {
-            self.dismiss(animated: true) {
-                message = "The bluetooth/wifi is not working in your area."
-            }
+            self.dismiss(animated: true, completion: nil)
         } else {
             message = "Your game invitation was declined."
         }

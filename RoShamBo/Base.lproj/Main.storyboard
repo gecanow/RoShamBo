@@ -271,7 +271,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cs5-WF-q6T">
-                                <rect key="frame" x="16" y="166" width="343" height="432"/>
+                                <rect key="frame" x="16" y="166" width="343" height="426"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="idCellPeer" id="HWh-2q-wyj">
@@ -285,7 +285,7 @@
                                 </prototypes>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="10"/>
+                                        <integer key="value" value="5"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
@@ -537,6 +537,23 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eez-dv-b4X">
+                                <rect key="frame" x="294" y="562" width="65" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="refresh"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <integer key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="onTappedRefresh:" destination="BYZ-38-t0r" eventType="touchUpInside" id="v25-4S-UsX"/>
+                                </connections>
+                            </button>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gOu-FY-Gkm">
                                 <rect key="frame" x="130" y="542" width="115" height="67"/>
                                 <subviews>
@@ -558,6 +575,45 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dms-Ux-Jqf">
+                                <rect key="frame" x="65" y="264" width="240" height="114"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="success! your game request has been sent." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Bx-rW-PA2">
+                                        <rect key="frame" x="8" y="8" width="224" height="67"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1xH-p9-RHh">
+                                        <rect key="frame" x="97" y="76" width="46" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.85751201919999998" green="0.85751201919999998" blue="0.85751201919999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="ok"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="2"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="onTappedOkRequestSent:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ywk-Z6-3Au"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <integer key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -569,11 +625,11 @@
                             <constraint firstAttribute="trailingMargin" secondItem="LFM-gd-0f5" secondAttribute="trailing" constant="149" id="5Qa-kg-Ucu"/>
                             <constraint firstItem="g4Y-3l-Erx" firstAttribute="leading" secondItem="LFM-gd-0f5" secondAttribute="trailing" constant="8" id="5vH-cf-98b"/>
                             <constraint firstItem="DGQ-36-fS0" firstAttribute="top" secondItem="g4Y-3l-Erx" secondAttribute="bottom" constant="7" id="8dJ-gO-JNe"/>
-                            <constraint firstItem="gQv-3i-C3e" firstAttribute="top" secondItem="cs5-WF-q6T" secondAttribute="bottom" constant="8" id="DZu-ER-ax9"/>
                             <constraint firstItem="EqP-EH-SZU" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="HJg-nj-d7k"/>
                             <constraint firstItem="gQv-3i-C3e" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="IgD-0u-I5g"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="gOu-FY-Gkm" secondAttribute="bottom" constant="58" id="Ikk-tK-hOv"/>
                             <constraint firstItem="gOu-FY-Gkm" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="114" id="KD9-cY-dZj"/>
+                            <constraint firstItem="gQv-3i-C3e" firstAttribute="top" secondItem="cs5-WF-q6T" secondAttribute="bottom" constant="14" id="MLF-oJ-3FJ"/>
                             <constraint firstItem="o0D-uC-Fhe" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="219" id="MXh-S5-R5Q"/>
                             <constraint firstItem="LFM-gd-0f5" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="N1c-a0-zcg"/>
                             <constraint firstItem="gQv-3i-C3e" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Q1I-vf-uBo"/>
@@ -595,6 +651,7 @@
                     <navigationItem key="navigationItem" id="PJv-fn-lTP"/>
                     <connections>
                         <outlet property="displayNameLabel" destination="N3H-BN-n87" id="Rzd-i0-HuY"/>
+                        <outlet property="gameRequestSentView" destination="dms-Ux-Jqf" id="Bfa-Yr-GpT"/>
                         <outlet property="informationView" destination="o0D-uC-Fhe" id="RQ2-RS-zmh"/>
                         <outlet property="rsbScoreView" destination="qo2-H7-iQq" id="ik4-hq-ImA"/>
                         <outlet property="scoreInfoView" destination="gOu-FY-Gkm" id="aXH-Rb-JOy"/>
@@ -727,6 +784,48 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X2g-w6-E9k">
+                                <rect key="frame" x="176" y="59" width="183" height="49"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="a rematch request has been sent" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JiX-DB-agv">
+                                        <rect key="frame" x="8" y="8" width="129" height="33"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jvL-Lu-HF0">
+                                        <rect key="frame" x="145" y="9" width="30" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.85751201919999998" green="0.85751201919999998" blue="0.85751201919999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="ok"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KgG-EQ-uor">
+                                        <rect key="frame" x="145" y="9" width="30" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.85751201919999998" green="0.85751201919999998" blue="0.85751201919999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="ok"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="2"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="onTappedOkRematchRequest:" destination="t9x-QB-EMw" eventType="touchUpInside" id="wgW-fX-IHy"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
@@ -755,6 +854,7 @@
                         <outlet property="choiceLabel" destination="YJY-2I-yNm" id="iad-4l-MeE"/>
                         <outlet property="paperButton" destination="oq2-I6-NTo" id="su7-5l-mil"/>
                         <outlet property="rematchButton" destination="m30-HD-yk3" id="FX5-JS-uXg"/>
+                        <outlet property="rematchRequestView" destination="X2g-w6-E9k" id="oEY-mQ-2LS"/>
                         <outlet property="rockButton" destination="CeC-hh-RFJ" id="J74-XN-dSF"/>
                         <outlet property="scissorsButton" destination="eXx-In-Fy3" id="Nce-Xb-kOR"/>
                         <outlet property="winnerLabel" destination="9LQ-Jf-E7z" id="Di9-Qa-d99"/>
@@ -920,6 +1020,48 @@
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="StB-ih-xa5">
+                                <rect key="frame" x="176" y="59" width="183" height="49"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="a rematch request has been sent" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NKE-nO-zA9">
+                                        <rect key="frame" x="8" y="8" width="129" height="33"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="THu-Qm-Gh5">
+                                        <rect key="frame" x="145" y="9" width="30" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.85751201919999998" green="0.85751201919999998" blue="0.85751201919999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="ok"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bYF-EK-d6V">
+                                        <rect key="frame" x="145" y="9" width="30" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.85751201919999998" green="0.85751201919999998" blue="0.85751201919999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="ok"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="2"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="onTappedRematchRequest:" destination="a09-8q-F40" eventType="touchUpInside" id="bnq-nY-g7L"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -935,6 +1077,7 @@
                         <outlet property="cell8" destination="Tzk-Ac-Xfb" id="g02-nG-LEI"/>
                         <outlet property="mainText" destination="It8-gI-HJm" id="EsY-L2-ky4"/>
                         <outlet property="rematchButton" destination="iez-wL-aTF" id="Grl-UK-57i"/>
+                        <outlet property="rematchRequestView" destination="StB-ih-xa5" id="JTv-cE-iS0"/>
                         <outlet property="smallText" destination="LLJ-8E-vEz" id="4pZ-IU-spO"/>
                     </connections>
                 </viewController>
