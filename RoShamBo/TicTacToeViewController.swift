@@ -70,6 +70,7 @@ class TicTacToeViewController: UIViewController, MPCManagerGameViewDelegate {
     func restartGame() {
         mainText.text = "a rematch has begun!"
         rematchRequestView.isHidden = true
+        rematchButton.isEnabled = false
         
         for cell in cellArray {
             if doIStart! {
