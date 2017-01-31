@@ -201,6 +201,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.appDelegate.mpcManager.browser.invitePeer(selectedPeer, to: self.appDelegate.mpcManager.session, withContext: myData, timeout: 20)
             
             self.gameRequestSentView.isHidden = false
+            self.instigatedGame = true
         }
         actionSheet.addAction(rsb)
         
@@ -210,6 +211,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.appDelegate.mpcManager.browser.invitePeer(selectedPeer, to: self.appDelegate.mpcManager.session, withContext: myData, timeout: 20)
             
             self.gameRequestSentView.isHidden = false
+            self.instigatedGame = true
         }
         actionSheet.addAction(ttt)
         

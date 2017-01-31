@@ -16,7 +16,7 @@ class InitialViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         displayNameTextField.delegate = self
         
-        if (UserDefaults.standard.object(forKey: "displayName") as! String) != "" {
+        if (UserDefaults.standard.object(forKey: "displayName") as? String) != "" {
             displayNameTextField.text = UserDefaults.standard.object(forKey: "displayName") as? String
             DispatchQueue.main.async {
                 self.performSegue(withIdentifier: "mainScreenSegue", sender: nil)

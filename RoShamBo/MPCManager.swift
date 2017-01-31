@@ -54,7 +54,7 @@ class MPCManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     override init() {
         super.init()
         
-        peer = MCPeerID(displayName: UIDevice.current.name)
+        peer = MCPeerID(displayName: String(UIDevice.current.name))
         
         session = MCSession(peer: peer)
         session.delegate = self
